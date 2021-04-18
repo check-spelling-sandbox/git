@@ -7,4 +7,5 @@ ignore$
 \.lock$
 \.min\.
 \.mod$
+\.po$
 ^\.github/
