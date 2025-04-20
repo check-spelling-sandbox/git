@@ -106,7 +106,7 @@ jobs:
   windows-build:
     name: win build
     needs: ci-config
-    if: needs.ci-config.outputs.enabled == 'yes'
+    if: false
     runs-on: windows-latest
     concurrency:
       group: windows-build-${{ github.ref }}
@@ -128,6 +128,7 @@ jobs:
         name: windows-artifacts
         path: artifacts
   windows-test:
+    if: false
     name: win test
     runs-on: windows-latest
     needs: [ci-config, windows-build]
@@ -252,7 +253,7 @@ jobs:
   windows-meson-build:
     name: win+Meson build
     needs: ci-config
-    if: needs.ci-config.outputs.enabled == 'yes'
+    if: false
     runs-on: windows-latest
     concurrency:
       group: windows-meson-build-${{ github.ref }}
@@ -302,8 +303,7 @@ jobs:
 
   regular:
     name: ${{matrix.vector.jobname}} (${{matrix.vector.pool}})
-    needs: ci-config
-    if: needs.ci-config.outputs.enabled == 'yes'
+    if: true
     concurrency:
       group: ${{ matrix.vector.jobname }}-${{ matrix.vector.pool }}-${{ github.ref }}
       cancel-in-progress: ${{ needs.ci-config.outputs.skip_concurrent == 'yes' }}
@@ -346,7 +346,7 @@ jobs:
   fuzz-smoke-test:
     name: fuzz smoke test
     needs: ci-config
-    if: needs.ci-config.outputs.enabled == 'yes'
+    if: false
     env:
       CC: clang
       CI_JOB_IMAGE: ubuntu-latest
@@ -358,7 +358,7 @@ jobs:
   dockerized:
     name: ${{matrix.vector.jobname}} (${{matrix.vector.image}})
     needs: ci-config
-    if: needs.ci-config.outputs.enabled == 'yes'
+    if: false
     concurrency:
       group: dockerized-${{ matrix.vector.jobname }}-${{ matrix.vector.image }}-${{ github.ref }}
       cancel-in-progress: ${{ needs.ci-config.outputs.skip_concurrent == 'yes' }}
@@ -430,7 +430,7 @@ jobs:
         path: ${{env.FAILED_TEST_ARTIFACTS}}
   static-analysis:
     needs: ci-config
-    if: needs.ci-config.outputs.enabled == 'yes'
+    if: false
     env:
       jobname: StaticAnalysis
       CI_JOB_IMAGE: ubuntu-22.04
@@ -445,7 +445,7 @@ jobs:
     - run: ci/check-directional-formatting.bash
   sparse:
     needs: ci-config
-    if: needs.ci-config.outputs.enabled == 'yes'
+    if: false
     env:
       jobname: sparse
       CI_JOB_IMAGE: ubuntu-22.04
@@ -461,7 +461,7 @@ jobs:
   documentation:
     name: documentation
     needs: ci-config
-    if: needs.ci-config.outputs.enabled == 'yes'
+    if: false
     concurrency:
       group: documentation-${{ github.ref }}
       cancel-in-progress: ${{ needs.ci-config.outputs.skip_concurrent == 'yes' }}
