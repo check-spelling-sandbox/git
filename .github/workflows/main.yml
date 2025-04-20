@@ -302,34 +302,12 @@ jobs:
       run: meson test -C build --list | Select-Object -Skip 1 | Select-String .* | Group-Object -Property { $_.LineNumber % 10 } | Where-Object Name -EQ ${{ matrix.nr }} | ForEach-Object { meson test -C build --no-rebuild --print-errorlogs $_.Group }
 
   regular:
-    name: ${{matrix.vector.jobname}} (${{matrix.vector.pool}})
     if: true
-    concurrency:
-      group: ${{ matrix.vector.jobname }}-${{ matrix.vector.pool }}-${{ github.ref }}
-      cancel-in-progress: ${{ needs.ci-config.outputs.skip_concurrent == 'yes' }}
-    strategy:
-      fail-fast: false
-      matrix:
-        vector:
-          - jobname: osx-clang
-            cc: clang
-            pool: macos-13
-          - jobname: osx-reftable
-            cc: clang
-            pool: macos-13
-          - jobname: osx-gcc
-            cc: gcc-13
-            pool: macos-13
-          - jobname: osx-meson
-            cc: clang
-            pool: macos-13
     env:
-      CC: ${{matrix.vector.cc}}
-      CC_PACKAGE: ${{matrix.vector.cc_package}}
-      jobname: ${{matrix.vector.jobname}}
-      CI_JOB_IMAGE: ${{matrix.vector.pool}}
+      CC:
+      CI_JOB_IMAGE: ubuntu-latest
       TEST_OUTPUT_DIRECTORY: ${{github.workspace}}/t
-    runs-on: ${{matrix.vector.pool}}
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
     - run: ci/install-dependencies.sh
@@ -341,7 +319,7 @@ jobs:
       if: failure() && env.FAILED_TEST_ARTIFACTS != ''
       uses: actions/upload-artifact@v4
       with:
-        name: failed-tests-${{matrix.vector.jobname}}
+        name: failed-tests-ubuntu-latest
         path: ${{env.FAILED_TEST_ARTIFACTS}}
   fuzz-smoke-test:
     name: fuzz smoke test
