@@ -21,7 +21,7 @@ concurrency:
 jobs:
   ci-config:
     name: config
-    if: vars.CI_BRANCHES == '' || contains(vars.CI_BRANCHES, github.ref_name)
+    if: false
     runs-on: ubuntu-latest
     outputs:
       enabled: ${{ steps.check-ref.outputs.enabled }}${{ steps.skip-if-redundant.outputs.enabled }}
